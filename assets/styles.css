@@ -42,7 +42,7 @@
       flex-direction: column;
       box-sizing: border-box;
     }
-    /* Fix mobile stacking so output-panel fills remaining height and scrolls correctly */
+    /* Mobile layout fix: stack panels and let output fill remaining height */
     @media (max-width: 768px) {
       main {
         flex-direction: column;
@@ -57,25 +57,25 @@
       }
     
       .output-panel {
-        /* let the panel flex to fill remaining space */
-        flex: 1 1 auto;
+        width: 100% !important;      /* override desktop calc */
+        flex: 1 1 auto !important;    /* allow this panel to grow/shrink */
+        min-height: 0;                /* enable child flex overflow */
         display: flex;
         flex-direction: column;
-        min-height: 0;             /* allow child overflow to work */
         overflow: hidden;
         padding: 1rem;
       }
     
       #outputBox {
-        /* fill the panel, scroll vertically, wrap text */
-        flex: 1 1 auto;
-        min-height: 0;
-        overflow-y: auto;
-        overflow-x: hidden;
-        white-space: pre-wrap;
-        word-break: break-word;
+        flex: 1 1 auto;               /* fill the output-panel */
+        min-height: 0;                /* important for flex overflow */
+        overflow-y: auto;             /* vertical scroll */
+        overflow-x: hidden;           /* no horizontal scroll */
+        white-space: pre-wrap;        /* wrap long lines */
+        word-break: break-word;       /* break long words */
       }
     }
+
 
     .spin {
       animation: spin 1s linear infinite;
