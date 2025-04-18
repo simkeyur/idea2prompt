@@ -113,11 +113,5 @@ if (provider.value === "ollama") {
   document.getElementById("refreshModels").click();
 }
 
-//PWA
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .register('scripts/sw.js')
-      .then(() => console.log('✅ Service Worker registered'))
-      .catch((err) => console.error('Service Worker registration failed:', err));
-  }
+
   
