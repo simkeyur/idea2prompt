@@ -82,17 +82,18 @@
   }
 
   #outputBox {
-    flex-grow: 1;
-    max-height: 100%;
-    overflow-y: auto;
-    overflow-x: auto;
-    background-color: var(--bs-secondary-bg);
-    white-space: pre;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    font-family: var(--bs-font-monospace);
-    min-height: 0;
-  }
+      flex-grow: 1;
+      max-height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;      /* 🔄 Prevent horizontal scroll */
+      background-color: var(--bs-secondary-bg);
+      white-space: pre-wrap;   /* 🔄 Wrap long lines */
+      word-break: break-word;  /* 🔄 Break long words if needed */
+      padding: 1rem;
+      border-radius: 0.5rem;
+      font-family: var(--bs-font-monospace);
+      min-height: 0;
+    }
 
   .copy-container {
     display: flex;
