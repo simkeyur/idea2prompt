@@ -114,7 +114,7 @@
       }
     });
 
-    // Refine Button Logic with CORS Anywhere
+    // Refine Button Logic
     const refineBtn = document.getElementById('refine-btn');
     const responseOutput = document.getElementById('response-output');
     const loadingState = document.getElementById('loading');
@@ -138,9 +138,7 @@
         const apiKey = document.getElementById('gemini-api-key').value.trim();
         if (!apiKey) return;
 
-        // Use CORS Anywhere Proxy for Gemini API request
-        const corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/';
-        url = `${corsAnywhereUrl}https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContentkey=${apiKey}`;
         payload = { prompt: userPrompt, system_instruction: "Rewrite the user’s idea as a clear, complete prompt a large‑language model can act on. Keep intent, add missing context, specify role, format, constraints. Respond with the prompt only." };
       }
 
