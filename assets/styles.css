@@ -1,35 +1,26 @@
-:root {
-    --i2p-accent: #0d6efd;
-    --i2p-orange: #ff8c00;
-  }
-
-  html,
-  body {
-    height: 100%;
-    margin: 0;
-  }
-
-  body {
-    display: flex;
-    flex-direction: column;
-  }
-
-  header {
-    background-color: #111;
-    color: white;
-    padding: 0.75rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  main {
+    :root {
+      --i2p-accent: #0d6efd;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: #000;
+      color: #fff;
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    main {
+      flex: 1;
       display: flex;
       height: 100%;
       overflow: hidden;
     }
-    
-    /* LEFT: resizable input panel */
     .input-panel {
       width: 35%;
       min-width: 250px;
@@ -42,87 +33,84 @@
       border-right: 1px solid var(--bs-border-color);
       box-sizing: border-box;
     }
-    
-    /* RIGHT: fixed-fill output panel */
     .output-panel {
-      flex-shrink: 0; /* 🔒 prevents shrinking when content grows */
-      width: calc(100% - 35%); /* ✅ dynamically fills remaining space */
+      flex-shrink: 0;
+      width: calc(100% - 35%);
       overflow: hidden;
       padding: 1rem;
       display: flex;
       flex-direction: column;
       box-sizing: border-box;
     }
-
-
-  /* 📱 On small screens: stack vertically */
-  @media (max-width: 768px) {
-    main {
-      flex-direction: column;
+    @media (max-width: 768px) {
+      main {
+        flex-direction: column;
+      }
+      .input-panel {
+        width: 100% !important;
+        max-width: 100%;
+        resize: none;
+        border-right: none;
+        border-bottom: 1px solid var(--bs-border-color);
+      }
+      .output-panel {
+        width: 100%;
+        max-height: 50%;
+      }
     }
-
-    .input-panel {
-      width: 100% !important;
-      max-width: 100%;
-      resize: none;
-      border-right: none;
-      border-bottom: 1px solid var(--bs-border-color);
+    #userPrompt {
+      flex-grow: 1;
+      resize: vertical;
+      min-height: 200px;
     }
-
-    .output-panel {
-      width: 100%;
-      max-height: 50%;
-    }
-  }
-
-
-  #userPrompt {
-    flex-grow: 1;
-    resize: vertical;
-    min-height: 200px;
-  }
-
-  #refineBtn {
-    margin-top: 1rem;
-  }
-
-  #outputBox {
+    #outputBox {
       flex-grow: 1;
       max-height: 100%;
       overflow-y: auto;
-      overflow-x: hidden;      /* 🔄 Prevent horizontal scroll */
+      overflow-x: hidden;
       background-color: var(--bs-secondary-bg);
-      white-space: pre-wrap;   /* 🔄 Wrap long lines */
-      word-break: break-word;  /* 🔄 Break long words if needed */
+      white-space: pre-wrap;
+      word-break: break-word;
       padding: 1rem;
       border-radius: 0.5rem;
       font-family: var(--bs-font-monospace);
       min-height: 0;
     }
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    #modelSettings label {
+      margin-top: 0.5rem;
+    }
+    #pinnedList {
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .toast-container {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      z-index: 1055;
+    }
 
-  .copy-container {
-    display: flex;
-    justify-content: space-between;
+    #pinnedList .badge {
+    display: inline-flex;
     align-items: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .toast-container {
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 1055;
-  }
-
-  .spin {
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
+    margin: 0.25rem;
+    padding-right: 0.5rem;     /* room for close icon */
+    cursor: pointer;           /* entire badge is clickable */
     }
-    to {
-      transform: rotate(360deg);
+    #pinnedList .badge .btn-close {
+    --bs-btn-padding-x: 0.25rem;
+    --bs-btn-padding-y: 0;
+    font-size: 0.75rem;
+    opacity: 0.75;
+    margin-left: 0.5rem;
     }
-  }
+    #pinnedList .badge .btn-close:hover {
+    opacity: 1;
+    }
