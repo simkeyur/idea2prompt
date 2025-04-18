@@ -24,31 +24,36 @@
   }
 
   main {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    overflow: hidden;
-  }
+      display: flex;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    /* LEFT: resizable input panel */
+    .input-panel {
+      width: 35%;
+      min-width: 250px;
+      max-width: 80%;
+      resize: horizontal;
+      overflow: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--bs-border-color);
+      box-sizing: border-box;
+    }
+    
+    /* RIGHT: fixed-fill output panel */
+    .output-panel {
+      flex-shrink: 0; /* 🔒 prevents shrinking when content grows */
+      width: calc(100% - 35%); /* ✅ dynamically fills remaining space */
+      overflow: hidden;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
 
-  .input-panel {
-    width: 35%;
-    min-width: 250px;
-    max-width: 80%;
-    resize: horizontal;
-    overflow: auto;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid var(--bs-border-color);
-  }
-
-  .output-panel {
-    flex-grow: 1;
-    overflow: hidden;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-  }
 
   /* 📱 On small screens: stack vertically */
   @media (max-width: 768px) {
