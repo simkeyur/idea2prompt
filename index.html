@@ -16,106 +16,152 @@
     <link href="assets/styles.css" rel="stylesheet" />
     <link rel="manifest" href="assets/manifest.json" />
     <meta name="theme-color" content="#000000" />
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   </head>
-  <body>
-    <header>
-      <h1 class="fs-5 mb-0">🪄 Idea2Prompt</h1>
-      <button id="themeToggle" class="btn btn-outline-light btn-sm">
-        <i class="bi bi-circle-half"></i>
-      </button>
-    </header>
+ <body>
+  <header>
+    <h1 class="fs-5 mb-0"><i class="bi bi-stars me-2"></i>Idea2Prompt</h1>
+    <button id="themeToggle" class="btn btn-outline-light btn-sm">
+      <i class="bi bi-circle-half"></i>
+    </button>
+  </header>
 
-    <main>
-      <!-- Left Column -->
-      <div class="input-panel">
-        <div class="mb-3">
-          <label for="provider" class="form-label">Choose Backend</label>
-          <select class="form-select" id="provider">
-            <option value="ollama">Ollama</option>
-            <option value="gemini" selected>Gemini</option>
-          </select>
-        </div>
+  <main>
+    <!-- Input Column -->
+    <div class="input-panel">
+      <!-- Provider Picker -->
+      <div class="mb-3">
+        <label for="provider" class="form-label">Choose Backend</label>
+        <select id="provider" class="form-select">
+          <option value="ollama">Ollama</option>
+          <option value="gemini" selected>Gemini</option>
+        </select>
+      </div>
 
-        <div id="ollamaFields" class="d-none">
-          <div class="mb-3 d-flex">
-            <div class="flex-grow-1 me-2">
-              <label class="form-label">Ollama Base URL</label>
-              <input
-                type="text"
-                id="ollamaUrl"
-                class="form-control"
-                value="http://localhost:11434"
-              />
-            </div>
-            <div class="align-self-end mb-1">
-              <button id="refreshModels" class="btn btn-outline-warning btn-sm">
-                <i class="bi bi-arrow-clockwise"></i>
-              </button>
-            </div>
+      <!-- Ollama Settings -->
+      <div id="ollamaFields" class="d-none">
+        <div class="mb-3 d-flex">
+          <div class="flex-grow-1 me-2">
+            <label class="form-label">Ollama URL</label>
+            <input type="text" id="ollamaUrl" class="form-control" value="http://localhost:11434" />
           </div>
-          <div class="mb-3">
-            <label class="form-label">Model</label>
-            <select id="ollamaModel" class="form-select"></select>
-          </div>
-        </div>
-
-        <div id="geminiFields">
-          <div class="mb-3">
-            <label class="form-label">Gemini API Key</label>
-            <input type="password" id="geminiKey" class="form-control" />
-            <div class="form-text">
-              You can create your Gemini API key at
-              <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a>.
-            </div>
-          </div>
-        </div>
-
-
-        <div class="mb-3">
-          <label class="form-label">Your Idea</label>
-          <textarea id="userPrompt" class="form-control" rows="6" placeholder="Enter rough idea..."></textarea>
-        </div>
-
-        <div class="d-grid mt-auto">
-          <button id="refineBtn" class="btn btn-outline-success">
-            <i class="bi bi-stars"></i> Refine Prompt
+          <button id="refreshModels" class="btn btn-outline-warning btn-sm align-self-end">
+            <i class="bi bi-arrow-clockwise"></i>
           </button>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Model</label>
+          <select id="ollamaModel" class="form-select"></select>
         </div>
       </div>
 
-      <!-- Right Column -->
-      <div class="output-panel">
-        <div class="copy-container">
-          <label class="form-label mb-0">Refined Prompt</label>
-          <button id="copyBtn" class="btn btn-outline-info btn-sm">
-            <i class="bi bi-clipboard"></i> Copy
-          </button>
+      <!-- Gemini Settings -->
+      <div id="geminiFields">
+        <div class="mb-3">
+          <label class="form-label">Gemini API Key</label>
+          <input type="password" id="geminiKey" class="form-control" />
+          <div class="form-text">
+            You can create your Gemini API key at
+            <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a>.
+          </div>
         </div>
-        <pre id="outputBox" class="form-control"></pre>
       </div>
-    </main>
 
-    <div class="toast-container">
-      <div
-        id="copyToast"
-        class="toast text-bg-success border-0 align-items-center"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-      >
-        <div class="d-flex">
-          <div class="toast-body">Copied to clipboard!</div>
-          <button
-            type="button"
-            class="btn-close btn-close-white me-2 m-auto"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
-        </div>
+      <!-- Model Settings -->
+      <div id="modelSettings" class="mb-3">
+        <label class="form-label">Temperature: <span id="tempVal">0.7</span></label>
+        <input type="range" id="temperature" class="form-range" min="0" max="1" step="0.01" value="0.7" />
+        <label class="form-label">Top-p: <span id="topPVal">0.8</span></label>
+        <input type="range" id="topP" class="form-range" min="0" max="1" step="0.01" value="0.8" />
+      </div>
+
+      <!-- Prompt Templates -->
+      <div id="templates" class="mb-3">
+        <label class="form-label">Prompt Templates</label>
+        <select id="templateSelect" class="form-select">
+          <option value="">-- Select a template --</option>
+          <option value="Write a creative blog post outline about {{topic}}.">Blog Outline</option>
+          <option value="Summarize the following text: {{text}}">Summarizer</option>
+          <option value="Draft a professional email to {{recipient}} asking about {{subject}}.">Email Request</option>
+        </select>
+      </div>
+
+      <!-- Pinned Ideas -->
+      <div id="pinnedSection" class="mb-3">
+        <label class="form-label">Pinned Ideas</label>
+        <div id="pinnedList" class="d-flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- User Prompt Input -->
+      <div class="mb-3">
+        <label class="form-label">Your Idea</label>
+        <textarea id="userPrompt" class="form-control" rows="6" placeholder="Enter rough idea..."></textarea>
+        <div class="form-text">Input tokens: <span id="inputTokens">0</span></div>
+      </div>
+
+      <!-- Refine Button -->
+      <div class="d-grid mt-auto">
+        <button id="refineBtn" class="btn btn-outline-success">
+          <i class="bi bi-stars"></i> Refine Prompt
+        </button>
       </div>
     </div>
 
+    <!-- Output Column -->
+    <div class="output-panel">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label mb-0">Refined Prompt</label>
+        <div>
+          <button id="copyBtn" class="btn btn-outline-info btn-sm me-2">
+            <i class="bi bi-clipboard"></i>
+          </button>
+          <button id="pinOutputBtn" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-pin"></i>
+          </button>
+        </div>
+      </div>
+      <pre id="outputBox" class="form-control"></pre>
+      <div class="form-text mt-1">Output tokens: <span id="outputTokens">0</span></div>
+    </div>
+  </main>
+
+  <!-- Toasts -->
+  <div class="toast-container">
+    <div
+      id="copyToast"
+      class="toast text-bg-success border-0 align-items-center"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="d-flex">
+        <div class="toast-body">Copied to clipboard!</div>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+    </div>
+    <div
+      id="pinToast"
+      class="toast text-bg-primary border-0 align-items-center"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="d-flex">
+        <div class="toast-body">Prompt pinned!</div>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+    </div>
+  </div>
     <script type="module" src="scripts/script.js"></script>
     <script>
       //PWA
