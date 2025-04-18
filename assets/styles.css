@@ -44,37 +44,51 @@
     }
     /* Mobile layout fix: stack panels and let output fill remaining height */
     @media (max-width: 768px) {
+      /* Stack panels */
       main {
         flex-direction: column;
+        height: 100vh;        /* ensure we take full viewport height */
+        overflow: hidden;
       }
     
+      /* Input panel should size to its content (incl. the pinned button at bottom) */
       .input-panel {
+        flex: 0 0 auto;       /* don’t grow or shrink */
         width: 100% !important;
         max-width: 100%;
         resize: none;
         border-right: none;
         border-bottom: 1px solid var(--bs-border-color);
+        display: flex;
+        flex-direction: column;
       }
     
+      /* Output panel fills the rest of the height */
       .output-panel {
-        width: 100% !important;      /* override desktop calc */
-        flex: 1 1 auto !important;    /* allow this panel to grow/shrink */
-        min-height: 0;                /* enable child flex overflow */
+        flex: 1 1 auto;       /* grow to fill leftover space */
+        min-height: 0;        /* allow its children to scroll */
         display: flex;
         flex-direction: column;
         overflow: hidden;
         padding: 1rem;
       }
     
+      /* The refine button stays in input-panel, above the split */
+      #refineBtn {
+        margin-top: auto;
+      }
+    
+      /* Output box scrolls inside output-panel */
       #outputBox {
-        flex: 1 1 auto;               /* fill the output-panel */
-        min-height: 0;                /* important for flex overflow */
-        overflow-y: auto;             /* vertical scroll */
-        overflow-x: hidden;           /* no horizontal scroll */
-        white-space: pre-wrap;        /* wrap long lines */
-        word-break: break-word;       /* break long words */
+        flex: 1 1 auto;       /* fill output-panel vertically */
+        min-height: 0;        /* enable overflow */
+        overflow-y: auto;
+        overflow-x: hidden;
+        white-space: pre-wrap;
+        word-break: break-word;
       }
     }
+
 
 
     .spin {
