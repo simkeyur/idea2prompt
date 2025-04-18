@@ -73,12 +73,18 @@
     const skipGeminiSave = localStorage.getItem('geminiKeySkipReminder') === 'true';
     if (encryptedKey) {
       const pass = prompt('Enter passphrase to decrypt your Gemini API key:');
+      let decrypted = '';
       try {
-        const bytes = CryptoJS.AES.decrypt(encryptedKey, pass);
-        const key = bytes.toString(CryptoJS.enc.Utf8);
-        if (key) geminiKeyInput.value = key;
-      } catch {
+        decrypted = CryptoJS.AES.decrypt(encryptedKey, pass).toString(CryptoJS.enc.Utf8);
+      } catch (e) {
+        decrypted = '';
+      }
+      if (!decrypted) {
         alert('Invalid Gemini key passphrase');
+        // clear it so we don’t keep prompting forever
+        localStorage.removeItem('encryptedGeminiKey');
+      } else {
+        geminiKeyInput.value = decrypted;
       }
     }
 
