@@ -1,84 +1,83 @@
     :root {
       --i2p-accent: #0d6efd;
     }
+    /* ─── Base full‑height flex layout ───────────────────────────────────────── */
     html, body {
       height: 100%;
       margin: 0;
+    }
+    body {
       display: flex;
       flex-direction: column;
+      height: 100vh;      /* entire viewport */
     }
     header {
-      background-color: #000;
-      color: #fff;
-      padding: 0.75rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex: 0 0 auto;     /* natural height, no grow or shrink */
     }
     main {
-      flex: 1;
+      flex: 1 1 auto;     /* fill remaining below header */
       display: flex;
-      height: 100%;
       overflow: hidden;
     }
+    
+    /* ─── Desktop: side‑by‑side panels ────────────────────────────────────────── */
     .input-panel {
-      width: 35%;
+      flex: 0 0 35%;      /* fixed 35% width, resizable */
       min-width: 250px;
       max-width: 80%;
       resize: horizontal;
       overflow: auto;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
       border-right: 1px solid var(--bs-border-color);
       box-sizing: border-box;
     }
     .output-panel {
-      flex-shrink: 0;
-      width: calc(100% - 35%);
-      overflow: hidden;
-      padding: 1rem;
+      flex: 1 1 auto;     /* fill rest horizontally */
       display: flex;
       flex-direction: column;
+      overflow: hidden;
       box-sizing: border-box;
     }
-    /* Mobile layout fix: stack panels and let output fill remaining height */
-   @media (max-width: 768px) {
-      /* Stack input and output, each half‑screen tall */
+    
+    /* ─── Mobile (≤768px): stack and internal scroll ───────────────────────── */
+    @media (max-width: 768px) {
       main {
         flex-direction: column;
       }
     
       .input-panel {
-        height: 50vh;           /* top half of viewport */
-        max-height: 50vh;
-        overflow-y: auto;       /* scroll if input grows */
+        /* size to content, scroll if too tall */
+        flex: 0 0 auto;
+        width: 100% !important;
+        max-width: 100%;
+        resize: none;
         border-right: none;
         border-bottom: 1px solid var(--bs-border-color);
+        overflow-y: auto;
       }
     
       .output-panel {
-        height: 50vh;           /* bottom half of viewport */
-        max-height: 50vh;
+        /* fill leftover vertical space */
+        flex: 1 1 auto;
+        min-height: 0;    /* allow its child #outputBox to scroll */
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
       }
     
       #outputBox {
-        flex: 1 1 auto;         /* fill its parent */
-        min-height: 0;          /* allow proper flex overflow */
-        overflow-y: auto;       /* scroll vertically */
-        overflow-x: hidden;     /* no horizontal scroll */
+        /* scroll inside */
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
         white-space: pre-wrap;
         word-break: break-word;
       }
     
-      /* Ensure the refine button stays at bottom of input-panel */
+      /* keep refine button stuck at bottom of input-panel */
       #refineBtn {
         margin-top: auto;
       }
     }
+
 
     .spin {
       animation: spin 1s linear infinite;
