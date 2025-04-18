@@ -42,10 +42,12 @@
       flex-direction: column;
       box-sizing: border-box;
     }
+    /* Fix mobile stacking so output-panel fills remaining height and scrolls correctly */
     @media (max-width: 768px) {
       main {
         flex-direction: column;
       }
+    
       .input-panel {
         width: 100% !important;
         max-width: 100%;
@@ -53,29 +55,28 @@
         border-right: none;
         border-bottom: 1px solid var(--bs-border-color);
       }
+    
       .output-panel {
-        width: 100%;
-        max-height: 50%;
+        /* let the panel flex to fill remaining space */
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;             /* allow child overflow to work */
+        overflow: hidden;
+        padding: 1rem;
+      }
+    
+      #outputBox {
+        /* fill the panel, scroll vertically, wrap text */
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        white-space: pre-wrap;
+        word-break: break-word;
       }
     }
-    #userPrompt {
-      flex-grow: 1;
-      resize: vertical;
-      min-height: 200px;
-    }
-    #outputBox {
-      flex-grow: 1;
-      max-height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      background-color: var(--bs-secondary-bg);
-      white-space: pre-wrap;
-      word-break: break-word;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      font-family: var(--bs-font-monospace);
-      min-height: 0;
-    }
+
     .spin {
       animation: spin 1s linear infinite;
     }
