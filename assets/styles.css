@@ -1,4 +1,4 @@
-    :root {
+:root {
       --i2p-accent: #0d6efd;
     }
     html, body {
@@ -42,40 +42,41 @@
       flex-direction: column;
       box-sizing: border-box;
     }
-    @media (max-width: 768px) {
-      main {
-        flex-direction: column;
-      }
-      .input-panel {
-        width: 100% !important;
-        max-width: 100%;
-        resize: none;
-        border-right: none;
-        border-bottom: 1px solid var(--bs-border-color);
-      }
-      .output-panel {
-        width: 100%;
-        max-height: 50%;
-      }
-    }
-    #userPrompt {
-      flex-grow: 1;
-      resize: vertical;
-      min-height: 200px;
-    }
-    #outputBox {
-      flex-grow: 1;
-      max-height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      background-color: var(--bs-secondary-bg);
-      white-space: pre-wrap;
-      word-break: break-word;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      font-family: var(--bs-font-monospace);
-      min-height: 0;
-    }
+
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+    /* ensure the container can shrink properly */
+    min-height: 0;
+  }
+
+  .input-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    resize: none;
+    border-right: none;
+    border-bottom: 1px solid var(--bs-border-color);
+  }
+
+  .output-panel {
+    /* fill the remaining vertical space */
+    flex: 1 1 auto !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 0 !important;      /* allow child to scroll */
+    overflow: hidden !important;    /* hide its own scrollbars */
+    width: 100% !important;
+    padding: 1rem !important;
+  }
+
+  #outputBox {
+    /* scroll only this inner box */
+    flex: 1 1 auto !important;
+    min-height: 0 !important;      /* critical in flex layouts */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+}
     .spin {
       animation: spin 1s linear infinite;
     }
